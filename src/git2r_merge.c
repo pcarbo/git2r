@@ -251,7 +251,7 @@ static int git2r_normal_merge(
         merge_opts,
         checkout_opts);
     if (error) {
-        if (error == GIT_EMERGECONFLICT) {
+        if (error == GIT_EMERGECONFLICT || error == GIT_ECONFLICT) {
             SET_VECTOR_ELT(
                 merge_result,
                 git2r_S3_item__git_merge_result__conflicts,
@@ -405,11 +405,12 @@ static int git2r_merge(
             }
 
             error = git2r_fast_forward_merge(
-                merge_result,
+		merge_result,
                 merge_heads[0],
                 repository,
                 name);
         } else if (merge_analysis & GIT_MERGE_ANALYSIS_NORMAL) {
+
             error = git2r_normal_merge(
                 merge_result,
                 merge_heads,
